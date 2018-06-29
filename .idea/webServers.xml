@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6a0a5cfa-fc44-4177-a0cb-154887cdf620" name="fichaje" url="http://ftp.poda.com.ar">
+        <fileTransfer host="ftp.poda.com.ar" port="21" rootFolder="/carnet">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

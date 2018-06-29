@@ -1,0 +1,228 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+
+        <div class="sidebar-wrapper ">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text text-success">
+                    PODA
+                </a>
+
+            </div>
+            <div class="logo">
+
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <span class="simple-text text-center">
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+
+                </span>
+
+                {% else %}
+                    <a  href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                {% endif %}
+            </div>
+            <div class="box">
+                <ul class="nav">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li >
+                            <a href="{{ path('admin_pedido_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_pedido_new')}}">
+                                <i class="ti-pin2"></i>
+                                <p>Crear Pedido</p>
+                            </a>
+                        </li>
+                        <li >
+                            <a href="{{ path('admin_sede_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Sedes</p>
+                            </a>
+                        </li>
+                        {#<li class="active">#}
+                        {#<a href="{{ path('fos_user_registration_register')}}">#}
+                        {#<i class="ti-pin2"></i>#}
+                        {#<p>Crear Sede</p>#}
+                        {#</a>#}
+                        {#</li>#}
+                        <li>
+                            <a href="{{ path('socio')}}">
+                                <i class="ti-search"></i>
+                                <p>Buscar Socios</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+
+                    {% else %}
+                        <li  class="active">
+                            <a href="{{ path('homepage')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="main-panel">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-7 col-lg-offset-2">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title text-center">Editar sede</h4>
+                                </div>
+                                <div class="content">
+                                    <div class="row">
+                                        <input id="id" value="{{ user.id }}" class="form-control border-input hide" type="text">
+
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Sede</label>
+                                                <input id="username" value="{{ user.username }}" class="form-control border-input" type="text">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Codigo</label>
+                                                <input id="codigo" value="{{ user.codigo }}" class="form-control border-input" type="email" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input id="email" value="{{ user.email }}" class="form-control border-input" type="email">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <h4 class="text-center">Si no quiere modificar la contraseña deje los campos vacios</h4>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input id="password" value="" class="form-control border-input" type="password">
+
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Repita Password</label>
+                                                <input id="password2" class="form-control border-input" type="password">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="text-center">
+                                        <a class="btn btn-info btn-fill btn-wd" href="{{ path('admin_sede_index') }}">Volver a la lista</a>
+                                            <button  onclick="myFunction()" class="btn btn-success  btn-fill btn-wd">Editar</button>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+            if ($("#codigo").val()== ""){
+                $('#codigo').prop("disabled", false); // Element(s) are now enabled.
+
+            }
+        function myFunction() {
+            var id=$("#id").val();
+
+            var username=$("#username").val();
+            var email=$("#email").val();
+            var codigo=$("#codigo").val();
+            var password=$("#password").val();
+            var password2=$("#password2").val();
+            console.log(id,username,email,codigo,password,password2);
+            if (password == password2){
+
+            }
+            else{
+                $.notify({
+                    icon: 'ti-check-box',
+                    message: 'Password distintas'
+
+                },{
+                    type: 'danger',
+                    timer: 2000
+                });
+            }
+            $(document).ready(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path ("changePass") }}",
+                    data: {username:username,email:email,password:password,id:id,codigo:codigo}
+                }).done(function (data) {
+                    console.log(data);
+                    $.notify({
+                        icon: 'ti-check-box',
+                        message: data
+
+                    },{
+                        type: 'success',
+                        timer: 2000
+                    });
+
+                });
+
+            })
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+
+
+
+    <div class="wrapper">
+        <div class="main-panel">
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-7 col-lg-offset-2">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title text-center">Crear Sede</h4>
+                                </div>
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Sede</label>
+                                                <input id="sede" class="form-control border-input" type="text">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Email</label>
+                                                <input id="email" class="form-control border-input" type="email">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Password</label>
+                                                <input id="password" class="form-control border-input" type="password">
+
+                                            </div>
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label>Repita Password</label>
+                                                <input id="password2" class="form-control border-input" type="password">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="text-center">
+                                        <a class="btn btn-info btn-fill btn-wd" href="{{ path('admin_sede_index') }}">Volver a la lista</a>
+
+                                        <input class="btn btn-success  btn-fill btn-wd" type="submit" value="Crear" />
+                                    </div>
+                                    <div class="clearfix"></div>
+
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,211 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+
+        <div class="sidebar-wrapper ">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text text-success">
+                    PODA
+                </a>
+
+            </div>
+            <div class="logo">
+
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <span class="simple-text text-center">
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+
+                </span>
+
+                {% else %}
+                    <a  href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                {% endif %}
+            </div>
+            <div class="box">
+                <ul class="nav">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li  >
+                            <a href="{{ path('admin_pedido_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li  class="active">
+                            <a href="{{ path('admin_pedido_new')}}">
+                                <i class="ti-pin2"></i>
+                                <p>Crear Pedido</p>
+                            </a>
+                        </li>
+                        <li >
+                            <a href="{{ path('admin_sede_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Sedes</p>
+                            </a>
+                        </li>
+                        {#<li >#}
+                            {#<a href="{{ path('fos_user_registration_register')}}">#}
+                                {#<i class="ti-pin2"></i>#}
+                                {#<p>Crear Sede</p>#}
+                            {#</a>#}
+                        {#</li>#}
+                        <li>
+                            <a href="{{ path('socio')}}">
+                                <i class="ti-search"></i>
+                                <p>Buscar Socios</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+
+                    {% else %}
+                        <li  class="active">
+                            <a href="{{ path('homepage')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="main-panel">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar bar1"></span>
+                            <span class="icon-bar bar2"></span>
+                            <span class="icon-bar bar3"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Poda</a>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-7 col-lg-offset-2">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title text-center">Crear Pedido</h4>
+                                    {% for flash_message in app.session.flashbag.get('notice') %}
+                                        <div class="flash-notice text-danger text-center ">
+                                            <h4>{{ flash_message }}</h4>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="content">
+                                    {{ form_start(form) }}
+                                    <div class="row">
+                                        <div class="col-md-6" style="display: none">
+                                            <div class="form-group" >
+                                                <label>Codigo</label>
+                                                {{ form_widget(form.codigo, { 'attr': {'class':'form-control border-input'}})}}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6" style="display: none">
+                                            <div class="form-group">
+                                                <label>Sede</label>
+                                                {{ form_widget(form.user, { 'attr': {'class':'form-control border-input'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 col-lg-offset-4 " style="display: none">
+                                            <div class="form-group">
+                                                <label>Fecha Recepcion</label>
+                                                {{ form_widget(form.fechaRecepcion, { 'attr': {'class':'datepiker'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group ">
+                                                <label class="text-center">Cargar socios</label>
+                                                {{ form_widget(form.listaSocios, { 'attr': {'class':'form-control border-input'}})}}
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6 hidden">
+                                            <div class="form-group">
+                                                <label>Sede</label>
+                                                {{ form_widget( form.fechaEntrega , { 'attr': {'class':'form-control border-input'}})}}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
+                                    <div class="text-center">
+                                        <input class="btn btn-info btn-fill btn-wd" onclick="mensaje()" type="submit" value="Crear" />
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    {{ form_end(form) }}
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            // you may need to change this code if you are not using Bootstrap Datepicker
+            $('.js-datepicker').datepicker({
+                format: 'yyyy-mm-dd'
+            });
+        });
+
+        function mensaje() {
+            $.notify({
+                icon: 'ti-check-box',
+                message: 'Su pedido esta sindo procesado'
+
+            },{
+                type: 'warning',
+                timer: 2000
+            });
+        }
+    </script>
+{% endblock %}

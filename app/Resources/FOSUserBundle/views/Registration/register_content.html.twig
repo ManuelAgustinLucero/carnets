@@ -1,0 +1,203 @@
+{% trans_default_domain 'FOSUserBundle' %}
+
+<div class="sidebar" data-background-color="white" data-active-color="danger">
+
+    <div class="sidebar-wrapper ">
+        <div class="logo">
+            <a href="http://www.creative-tim.com" class="simple-text text-success">
+                PODA
+            </a>
+
+        </div>
+        <div class="logo">
+
+            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                <span class="simple-text text-center">
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+
+                </span>
+
+            {% else %}
+                <a  href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+            {% endif %}
+        </div>
+        <div class="box">
+            <ul class="nav">
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li >
+                        <a href="{{ path('admin_pedido_index')}}">
+                            <i class="ti-view-list-alt"></i>
+                            <p>Pedidos</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('admin_pedido_new')}}">
+                            <i class="ti-pin2"></i>
+                            <p>Crear Pedido</p>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="{{ path('admin_sede_index')}}">
+                            <i class="ti-view-list-alt"></i>
+                            <p>Sedes</p>
+                        </a>
+                    </li>
+                    {#<li class="active">#}
+                        {#<a href="{{ path('fos_user_registration_register')}}">#}
+                            {#<i class="ti-pin2"></i>#}
+                            {#<p>Crear Sede</p>#}
+                        {#</a>#}
+                    {#</li>#}
+                    <li>
+                        <a href="{{ path('socio')}}">
+                            <i class="ti-search"></i>
+                            <p>Buscar Socios</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" href="{{ path('fos_user_security_logout') }}">
+                            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                            <i class="ti-back-left">
+                            </i>
+
+                        </a>
+                    </li>
+
+                {% else %}
+                    <li  class="active">
+                        <a href="{{ path('homepage')}}">
+                            <i class="ti-view-list-alt"></i>
+                            <p>Pedidos</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" href="{{ path('fos_user_security_logout') }}">
+                            {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                            <i class="ti-back-left">
+                            </i>
+
+                        </a>
+                    </li>
+                {% endif %}
+
+            </ul>
+        </div>
+
+    </div>
+</div>
+<div class="wrapper">
+    <div class="main-panel">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar bar1"></span>
+                        <span class="icon-bar bar2"></span>
+                        <span class="icon-bar bar3"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Poda</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav navbar-right">
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-8 col-md-7 col-lg-offset-2">
+                        <div class="card">
+                            <div class="header">
+                                <h4 class="title text-center">Crear Sede</h4>
+                            </div>
+                            <div class="content">
+                                {{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+                                <div class="text-center text-danger" style="text-decoration: none;">
+                                    {{ form_errors(form.plainPassword.first) }}
+                                    {{ form_errors(form.plainPassword.second) }}
+                                    {{ form_errors(form.email) }}
+                                    {{ form_errors(form.username) }}
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-offset-3">
+                                        <div class="form-group">
+                                            <label>Sede</label>
+                                            {{ form_widget(form.username,{'attr':{'class':'form-control border-input','placeholder':'Usuario','required':'required'}}) }}
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-offset-3">
+                                        <div class="form-group">
+                                            <label>Codigo</label>
+                                            {{ form_widget(form.codigo,{'attr':{'class':'form-control border-input','placeholder':'Codigo','required':'required'}}) }}
+
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-offset-3">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            {{ form_widget(form.email,{'attr':{'class':'form-control border-input','placeholder':'Email','required':'required'}}) }}
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-offset-3">
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            {{ form_widget(form.plainPassword.first,{'attr':{'class':'form-control border-input','placeholder':'Contraseña','required':'required'}}) }}
+
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-offset-3">
+                                        <div class="form-group">
+                                            <label>Repita Password</label>
+                                            {{ form_widget(form.plainPassword.second,{'attr':{'class':'form-control border-input','placeholder':'Repita contraseña','required':'required'}}) }}
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="text-center">
+                                    <a class="btn btn-info btn-fill btn-wd" href="{{ path('admin_sede_index') }}">Volver a la lista</a>
+
+                                    <input class="btn btn-success  btn-fill btn-wd" type="submit" value="{{ 'registration.submit'|trans }}" />
+                                </div>
+                                {{ form_end(form) }}
+
+                                <div class="clearfix"></div>
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>

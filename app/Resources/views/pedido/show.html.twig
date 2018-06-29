@@ -1,0 +1,320 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"> Entregar Pedido</h4>
+                </div>
+                <div class="modal-body">
+                    <input class="hidden" id="id" type="text">
+                    <label for="">Fecha de entrega</label>
+                    <input id="fecha" type="date">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="myFunction()" data-dismiss="modal">Entregar</button>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+
+        <div class="sidebar-wrapper ">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text text-success">
+                    PODA
+                </a>
+
+            </div>
+            <div class="logo">
+
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <span class="simple-text text-center">
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+
+                </span>
+
+                {% else %}
+                    <a  href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                {% endif %}
+            </div>
+            <div class="box">
+                <ul class="nav">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="active">
+                            <a href="{{ path('admin_pedido_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('admin_pedido_new')}}">
+                                <i class="ti-pin2"></i>
+                                <p>Crear Pedido</p>
+                            </a>
+                        </li>
+                        <li >
+                            <a href="{{ path('admin_sede_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Sedes</p>
+                            </a>
+                        </li>
+                        {#<li >#}
+                            {#<a href="{{ path('fos_user_registration_register')}}">#}
+                                {#<i class="ti-pin2"></i>#}
+                                {#<p>Crear Sede</p>#}
+                            {#</a>#}
+                        {#</li>#}
+                        <li>
+                            <a href="{{ path('socio')}}">
+                                <i class="ti-search"></i>
+                                <p>Buscar Socios</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+
+                    {% else %}
+                        <li  class="active">
+                            <a href="{{ path('homepage')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+    <div class="wrapper">
+        <div class="main-panel">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar bar1"></span>
+                            <span class="icon-bar bar2"></span>
+                            <span class="icon-bar bar3"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Poda</a>
+                    </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+
+
+                        <div class="col-lg-8 col-md-7 col-lg-offset-2">
+                            <div class="card">
+                                <div class="header">
+                                    <h4 class="title ">Detalle</h4>
+                                    <hr>
+                                </div>
+                                <div class="content">
+                                    <div class="row">
+                                        <div class="col-md-4 col-md-offset-2">
+                                            <div class="form-group">
+                                                <label>Codigo:</label>
+                                                {{ pedido.codigo }}
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>Sede:</label>
+                                                {{ pedido.User }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4 col-md-offset-2">
+                                            <div class="form-group">
+                                                <label>Fecha Recepcion:</label>
+                                                {% if pedido.fechaRecepcion %}{{ pedido.fechaRecepcion|date('Y-m-d ') }}{% endif %}
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label >Estado:</label>
+                                                {% if pedido.fechaEntrega == NULL %}
+                                                    <span style="cursor: pointer;" class="text-danger" data-toggle="modal" onclick="getId({{ pedido.id }})" data-target="#myModal">En proceso</span>
+                                                {% else %}
+                                                    <span class="text-success">Entregado el  <span class="text-success">{{ pedido.fechaEntrega|date('Y-m-d') }}</span></span>
+                                                {% endif %}
+
+                                            </div>
+
+                                        </div>
+                                        <div class="col-md-6 hidden">
+                                            <div class="form-group">
+                                                <label>Sede:</label>
+                                                {{ pedido.User }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                <hr>
+
+                                    <div class="col-md-12">
+                                        <div class="">
+                                            <div class="header">
+                                                <h4 class="title ">Lista de Socios </h4>
+                                                {#<p class="category">Here is a subtitle for this table</p>#}
+                                            </div>
+                                            <div class="content table-responsive table-full-width">
+                                                <table id="showpedido" class="table table-striped text-center">
+                                                    <thead >
+                                                    <th class="text-center">Codigo</th>
+                                                    <th class="text-center">Nombre y Apellido</th>
+                                                    </thead>
+                                                    <tbody>
+                                                    {% for socio in socios %}
+                                                        <tr>
+                                                            <td class="text-center">{{ socio.codigo }}</td>
+                                                            <td class="text-center">{{ socio.nombreApellido }}</td>
+
+
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        {{ form_start(delete_form) }}
+                                        <input   class=" btn btn-danger btn-fill btn-wd" type="submit" value="Eliminar">
+                                        {{ form_end(delete_form) }}
+                                        <br>
+                                        {#<a  class=" btn btn-info btn-fill btn-wd"  href="{{ path('admin_pedido_edit', { 'id': pedido.id }) }}">Editar</a>#}
+
+
+                                        <a  class=" btn btn-info btn-fill btn-wd" href="{{ path('admin_pedido_index') }}">Volver al menu</a>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+
+        $(document).ready( function () {
+            $('#showpedido').DataTable({
+
+                "language": {
+                    "sProcessing":    "Procesando...",
+                    "sLengthMenu":    "Mostrar _MENU_ registros",
+                    "sZeroRecords":   "No se encontraron resultados",
+                    "sEmptyTable":    "Ningún dato disponible en esta tabla",
+                    "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":   "",
+                    "sSearch":        "Buscar:",
+                    "sUrl":           "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":    "Último",
+                        "sNext":    "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                dom: 'B <"clear"> lfrtip',
+                order: [[ 1, "asc" ]],
+
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        exportOptions: {
+                            columns: [   0,1]
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        exportOptions: {
+                            columns: [   0,1]
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: "Carnets",
+
+                        exportOptions: {
+                            columns: [   0,1]
+
+                        },
+                        pageSize: 'LEGAL'
+
+                    },
+                    {
+                        extend: 'print',
+                        exportOptions: {
+                            columns: [   0,1]
+                        }
+                    }
+
+                ]
+            });
+
+        } );
+    </script>
+{% endblock %}

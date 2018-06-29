@@ -1,0 +1,237 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <div class="sidebar" data-background-color="white" data-active-color="danger">
+
+        <div class="sidebar-wrapper ">
+            <div class="logo">
+                <a href="http://www.creative-tim.com" class="simple-text text-success">
+                    PODA
+                </a>
+
+            </div>
+            <div class="logo">
+
+                {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                    <span class="simple-text text-center">
+                    {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }}
+
+                </span>
+
+                {% else %}
+                    <a  href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+                {% endif %}
+            </div>
+            <div class="box">
+                <ul class="nav">
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li onclick="changeactive(pedido)"  class="active">
+                            <a href="{{ path('admin_pedido_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li onclick="changeactive('crearpedido')" >
+                            <a href="{{ path('admin_pedido_new')}}">
+                                <i class="ti-pin2"></i>
+                                <p>Crear Pedido</p>
+                            </a>
+                        </li>
+                        <li >
+                            <a href="{{ path('admin_sede_index')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Sedes</p>
+                            </a>
+                        </li>
+                        <li >
+                            <a href="{{ path('fos_user_registration_register')}}">
+                                <i class="ti-pin2"></i>
+                                <p>Crear Sede</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('socio')}}">
+                                <i class="ti-search"></i>
+                                <p>Buscar Socios</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+
+                    {% else %}
+                        <li  class="active">
+                            <a href="{{ path('homepage')}}">
+                                <i class="ti-view-list-alt"></i>
+                                <p>Pedidos</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ path('sociosede')}}">
+                                <i class="ti-search"></i>
+                                <p>Buscar Socios</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="" href="{{ path('fos_user_security_logout') }}">
+                                {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
+                                <i class="ti-back-left">
+                                </i>
+
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+            </div>
+
+        </div>
+    </div>
+<div class="main-panel">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar bar1"></span>
+                    <span class="icon-bar bar2"></span>
+                    <span class="icon-bar bar3"></span>
+                </button>
+                <a class="navbar-brand" href="#">Poda</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="header">
+                            <h4 class="title">Lista de pedidos</h4>
+                            {#<p class="category">Here is a subtitle for this table</p>#}
+                        </div>
+                        <div class="content table-responsive table-full-width">
+                            <table id="myTableUserComun" class="table table-striped">
+                                <thead>
+                                <th>Codigo</th>
+                                <th>Fecharecepcion</th>
+                                <th>Sede</th>
+                                <th>Estado</th>
+                                <th>Detalles</th>
+                                </thead>
+                                <tbody>
+                                {% for pedido in pedidos %}
+                                <tr>
+                                    <td>{{ pedido.codigo }}</td>
+                                    <td>{% if pedido.fechaRecepcion %}{{ pedido.fechaRecepcion|date('Y-m-d H:i:s') }}{% endif %}</td>
+                                    <td>{{ pedido.User }}</td>
+                                    {% if pedido.fechaEntrega == NULL %}
+                                    <td class="text-warning"  >En proceso</td>
+                                    {% else %}
+                                    <td class="text-success">Entregado</td>
+                                    {% endif %}
+                                    <td>
+                                        <a href="{{ path('user_pedido_show', { 'id': pedido.id }) }}">Ver detalle</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <div class="col-md-6 col-md-offset-5">
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+
+
+        $(document).ready( function () {
+            $('#myTableUserComun').DataTable({
+
+                "language": {
+                    "sProcessing":    "Procesando...",
+                    "sLengthMenu":    "Mostrar _MENU_ registros",
+                    "sZeroRecords":   "No se encontraron resultados",
+                    "sEmptyTable":    "Ningún dato disponible en esta tabla",
+                    "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                    "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+                    "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+                    "sInfoPostFix":   "",
+                    "sSearch":        "Buscar:",
+                    "sUrl":           "",
+                    "sInfoThousands":  ",",
+                    "sLoadingRecords": "Cargando...",
+                    "oPaginate": {
+                        "sFirst":    "Primero",
+                        "sLast":    "Último",
+                        "sNext":    "Siguiente",
+                        "sPrevious": "Anterior"
+                    },
+                    "oAria": {
+                        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                    }
+                },
+                dom: 'B <"clear"> lfrtip',
+                order: [[ 0, "desc" ]],
+
+                buttons: [
+                    {
+                        extend: 'csvHtml5',
+                        title: "Pedido",
+
+                        exportOptions: {
+                            columns: [   0,1,2,3]
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: "Pedido",
+
+                        exportOptions: {
+                            columns: [   0,1,2,3]
+                        }
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        title: "Carnets",
+                        exportOptions: {
+                            columns: [   0,1,2,3]
+
+                        },
+                        pageSize: 'LEGAL'
+
+                    }
+
+                ]
+            });
+
+
+        } );
+    </script>
+{% endblock %}
